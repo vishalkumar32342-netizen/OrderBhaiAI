@@ -7,10 +7,20 @@ from pydantic import BaseModel
     quantity:int'''
 
 #Request schema
-'''class OrderCreate(BaseModel):
-    user_id:int
-    product:str
-    quantity:int'''
+class OrderCreate(BaseModel):
+    customer_id:int
+    order_id:str
+    amount:float
+    status:str
+    datetime:str
+
+class OrderUpdate(BaseModel):
+    customer_id:int
+    amount:float
+    status:str
+    datetime:str
+
+
 
 
 
@@ -22,6 +32,8 @@ class OrderResponse(BaseModel):
     amount:float
     status:str
     datetime:str
+
+
 
 
 #DeleteResponse schema
