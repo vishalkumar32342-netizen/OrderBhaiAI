@@ -1,3 +1,4 @@
+import sqlite3
 from db.base import get_orders_db
 
 def get_orders(
@@ -77,33 +78,38 @@ def create_order(order):
         VALUES (?, ?, ?, ?, ?)
             """
 
-
-    cursor = db.execute(
-        query,
-        (
-            order.customer_id,
-            order.order_id,
-            order.amount,
-            order.status,
-            order.datetime
+    try:
+        cursor = db.execute(
+            query,
+            (
+                order.customer_id,
+                order.order_id,
+                order.amount,
+                order.status,
+                order.datetime
+            )
         )
-    )
 
-    db.commit()
+        db.commit()
 
-    new_id = cursor.lastrowid
+        new_id = cursor.lastrowid
 
-    db.close()
+        db.close()
 
-    return {
-        "id": new_id,
-        "customer_id": order.customer_id,
-        "order_id":order.order_id,
-        "amount":order.amount,
-        "status":order.status,
-        "datetime":order.datetime
+        return {
+            "id": new_id,
+            "customer_id": order.customer_id,
+            "order_id":order.order_id,
+            "amount":order.amount,
+            "status":order.status,
+            "datetime":order.datetime
 
-    }
+        }
+    except sqlite3.IntegrityError:
+        return None
+
+    finally:
+        db.close()
 
 def update_order(order_id,order):
     db = get_orders_db()

@@ -35,7 +35,15 @@ def read_orders(
     )
 @app.post("/orders",response_model=OrderResponse)
 def add_order(order:OrderCreate):
-    return create_order(order)
+    new_order = create_order(order)
+
+    if new_order is None:
+        raise HTTPException(
+            status_code=409,
+            detail="Order ID already exists"
+        )
+
+    return new_order
 
 
 @app.put("/orders/{order_id}", response_model=OrderResponse)
